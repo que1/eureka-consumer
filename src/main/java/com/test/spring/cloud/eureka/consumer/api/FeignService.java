@@ -37,6 +37,7 @@ public interface FeignService {
     public String filterGet(@RequestParam("param1") String param1, @RequestParam("param2") String param2);
 
 
-
+    @RequestMapping(value = "textfilter-post", method = RequestMethod.POST)
+    public String filterPost(@RequestParam("param1") String param1, @RequestParam("param2") String param2);
 
 }

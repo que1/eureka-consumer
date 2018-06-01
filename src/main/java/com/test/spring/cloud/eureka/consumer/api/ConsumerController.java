@@ -142,4 +142,14 @@ public class ConsumerController {
         return this.feignService.filterGet("testMyParam1", "testMyParam2");
     }
 
+    /**
+     * feign测试，带参数，post方法
+     *
+     */
+    @RequestMapping(value = "/feign-test-param-post", method = RequestMethod.GET)
+    public String feignTestParamsPost() {
+        logger.info("call api-textfilter-post");
+        return this.feignService.filterPost("testMyParam1", "testMyParam2");
+    }
+
 }
