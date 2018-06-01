@@ -32,4 +32,20 @@ public class ConsumerService {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
 
+    @LoadBalanced
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @HystrixCommand(fallbackMethod = "callHystrixFallback")
+    public String callHystrix() {
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("http://eureka-provider/hystrix", String.class);
+        String responstBody = responseEntity.getBody();
+        logger.info("/eureka-consumer, call eureka-provider api-hystrix: " + responstBody);
+        return responstBody;
+    }
+
+    public String callHystrixFallback() {
+        return "error";
+    }
+
 }

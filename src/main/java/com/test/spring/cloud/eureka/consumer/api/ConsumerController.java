@@ -41,11 +41,17 @@ public class ConsumerController {
 
     @Autowired
     private ConsumerService consumerService;
+    @Autowired
+    private FeignService feignService;
 
     @LoadBalanced
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * 测试接口
+     *
+     */
     @RequestMapping(value = "/call-hello", method = RequestMethod.GET)
     public String callSayHello() {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("http://eureka-provider/hello", String.class);
@@ -54,6 +60,9 @@ public class ConsumerController {
         return responstBody;
     }
 
+    /**
+     * 测试get方法
+     */
     @RequestMapping(value = "/call-textfilter-get", method = RequestMethod.GET)
     public String callTextfilterGet() {
         // 方法1：{1}&{2}, object...
@@ -69,7 +78,10 @@ public class ConsumerController {
         return responstBody;
     }
 
-
+    /**
+     * 测试post方法
+     *
+     */
     @RequestMapping(value = "/call-textfilter-post", method = RequestMethod.GET)
     public String callTextfilterPost() {
         MultiValueMap<String, String> requestMap= new LinkedMultiValueMap<String, String>();
@@ -82,9 +94,18 @@ public class ConsumerController {
         return responstBody;
     }
 
+
+    /**
+     * 测试hystrix
+     *
+     */
     @HystrixCommand(fallbackMethod = "hystrixFallback")
     @RequestMapping(value = "/call-hystrix", method = RequestMethod.GET)
     public String callHystrix() {
+        /*
+         标准方法: restTemplate应该放在service里面，hystrix
+         this.consumerService.callHystrix();
+         */
         long startTime = System.currentTimeMillis();
         logger.info("...start...");
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("http://eureka-provider/hystrix", String.class);
@@ -99,5 +120,26 @@ public class ConsumerController {
         return "error";
     }
 
+
+    /**
+     *
+     * feign测试
+     *
+     */
+    @RequestMapping(value = "/feign-test", method = RequestMethod.GET)
+    public String feignTest() {
+        logger.info("call api-feign-test");
+        return this.feignService.sayHello();
+    }
+
+    /**
+     * feign测试，带参数，get方法
+     *
+     */
+    @RequestMapping(value = "/feign-test-param-get", method = RequestMethod.GET)
+    public String feignTestParamsGet() {
+        logger.info("call api-textfilter-get");
+        return this.feignService.filterGet("testMyParam1", "testMyParam2");
+    }
 
 }
