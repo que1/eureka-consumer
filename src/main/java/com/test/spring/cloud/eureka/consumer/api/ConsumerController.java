@@ -1,5 +1,6 @@
 package com.test.spring.cloud.eureka.consumer.api;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ import java.util.Map;
 public class ConsumerController {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsumerController.class);
+
+    @Autowired
+    private ConsumerService consumerService;
 
     @LoadBalanced
     @Autowired
@@ -77,5 +81,23 @@ public class ConsumerController {
         logger.info("/eureka-consumer, call eureka-provider api-textfilter-post: " + responstBody);
         return responstBody;
     }
+
+    @HystrixCommand(fallbackMethod = "hystrixFallback")
+    @RequestMapping(value = "/call-hystrix", method = RequestMethod.GET)
+    public String callHystrix() {
+        long startTime = System.currentTimeMillis();
+        logger.info("...start...");
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("http://eureka-provider/hystrix", String.class);
+        String responstBody = responseEntity.getBody();
+        logger.info("/eureka-consumer, call eureka-provider api-hystrix: " + responstBody);
+        long endTime = System.currentTimeMillis();
+        logger.info("spend time: " + (endTime - startTime) + "ms");
+        return responstBody;
+    }
+
+    public String hystrixFallback() {
+        return "error";
+    }
+
 
 }
