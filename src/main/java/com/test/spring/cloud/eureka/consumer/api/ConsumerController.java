@@ -43,6 +43,8 @@ public class ConsumerController {
     private ConsumerService consumerService;
     @Autowired
     private FeignService feignService;
+    @Autowired
+    private FeignHystrixService feignHystrixService;
 
     @LoadBalanced
     @Autowired
@@ -99,13 +101,13 @@ public class ConsumerController {
      * 测试hystrix
      *
      */
-    @HystrixCommand(fallbackMethod = "hystrixFallback")
     @RequestMapping(value = "/call-hystrix", method = RequestMethod.GET)
     public String callHystrix() {
+
+        //标准方法: restTemplate应该放在service里面，hystrix
+        return this.consumerService.callHystrix();
+
         /*
-         标准方法: restTemplate应该放在service里面，hystrix
-         this.consumerService.callHystrix();
-         */
         long startTime = System.currentTimeMillis();
         logger.info("...start...");
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("http://eureka-provider/hystrix", String.class);
@@ -114,6 +116,7 @@ public class ConsumerController {
         long endTime = System.currentTimeMillis();
         logger.info("spend time: " + (endTime - startTime) + "ms");
         return responstBody;
+        */
     }
 
     public String hystrixFallback() {
@@ -151,5 +154,19 @@ public class ConsumerController {
         logger.info("call api-textfilter-post");
         return this.feignService.filterPost("testMyParam1", "testMyParam2");
     }
+
+
+    /**
+     * feign-hystrix测试
+     *
+     */
+    @RequestMapping(value = "/feign-hystrix-test", method = RequestMethod.GET)
+    public String feignHystrixTest() {
+        logger.info("call api-hystrix by feign");
+        String result = this.feignHystrixService.callHystrix();
+        logger.info("get result: " + result);
+        return result;
+    }
+
 
 }
