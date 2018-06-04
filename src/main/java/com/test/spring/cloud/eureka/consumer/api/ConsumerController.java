@@ -1,6 +1,5 @@
 package com.test.spring.cloud.eureka.consumer.api;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

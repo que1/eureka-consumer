@@ -70,7 +70,6 @@ public class ConsumerService {
             // 如： 60000/6、60000/60是正确的配置,但是10000/7错误的
             // 在高并发的环境里，每个桶的时间长度建议大于1000ms, 默认值：6
             @HystrixProperty(name = "metrics.rollingPercentile.numBuckets", value = "6")
-
     })
     public String callHystrix() {
         long startTime = System.currentTimeMillis();
