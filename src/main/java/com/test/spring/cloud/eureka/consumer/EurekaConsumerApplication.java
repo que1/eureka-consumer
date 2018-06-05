@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+
 @EnableFeignClients
 @EnableCircuitBreaker
 @EnableDiscoveryClient
@@ -21,7 +22,7 @@ public class EurekaConsumerApplication {
         return new RestTemplate();
     }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		SpringApplication.run(EurekaConsumerApplication.class, args);
 	}
 
