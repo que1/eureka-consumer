@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  *
  */
-@FeignClient(name = "xlcloud-aq-nlp")
+@FeignClient(name = "eureka-zuul")
 public interface NlpFeignService {
 
     @LoadBalanced
-    @RequestMapping(value = "/nlp/api/comment/textfilter", method = RequestMethod.POST)
+    @RequestMapping(value = "/xlcloud-aq-nlp/nlp/api/comment/textfilter", method = RequestMethod.POST)
     public String commentTextfilting(@RequestParam("secretId") String secretId,
                                      @RequestParam("v") String v,
                                      @RequestParam("t") String t,
