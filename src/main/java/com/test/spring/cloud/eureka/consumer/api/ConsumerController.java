@@ -187,7 +187,7 @@ public class ConsumerController {
     @RequestMapping(value = "/nlp-test", method = RequestMethod.GET)
     public String nlpTest() throws UnsupportedEncodingException {
         String content = "皮皮虾你们好";
-
+        /*
         Map<String, String> params = new HashMap<String, String>();
         // 1.设置公共参数
         params.put("secretId", GenerateSigUtils.SECRETID);
@@ -204,9 +204,9 @@ public class ConsumerController {
         params.put("sig", "123");
         // 发送请求（无法走zuul，只能直接走provider的服务）
         // 错误无法获取参数
-        String result = this.restTemplate.postForObject("http://eureka-zuul/eureka-provider/textfilter-post", Map.class, String.class, params);
+        String result = this.restTemplate.postForObject("http://eureka-zuul/eureka-provider/textfilter-post", null, String.class, params);
+        */
 
-        /*
         MultiValueMap<String, String> requestMap= new LinkedMultiValueMap<String, String>();
         requestMap.add("secretId", GenerateSigUtils.SECRETID);
         requestMap.add("v", GenerateSigUtils.VERSION);
@@ -215,11 +215,14 @@ public class ConsumerController {
         requestMap.add("type", "basic-comment-text-filter");
         requestMap.add("param1", "myParam1");
         requestMap.add("param2", "myParam2");
+        String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, requestMap.toSingleValueMap());
         requestMap.add("sig", sig);
+
+
         // 走zuul
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("http://eureka-zuul/eureka-provider/textfilter-post", requestMap, String.class);
+        ResponseEntity<String> responseEntity  = this.restTemplate.postForEntity("http://eureka-zuul/xlcloud-aq-nlp/nlp/api/comment/textfilter", requestMap, String.class);
         String result = responseEntity.getBody();
-        */
+
         return result;
     }
 

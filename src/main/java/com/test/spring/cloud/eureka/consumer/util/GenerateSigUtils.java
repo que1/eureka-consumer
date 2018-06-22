@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.util.MultiValueMap;
 
 /**   
  * ProjectName: xlcloud-aq-test
@@ -54,4 +55,5 @@ public class GenerateSigUtils {
         // 4. MD5是128位长度的摘要算法，用16进制表示，一个十六进制的字符能表示4个位，所以签名后的字符串长度固定为32个十六进制字符。
         return DigestUtils.md5Hex(paramBuffer.toString().getBytes("UTF-8"));
     }
+
 }
