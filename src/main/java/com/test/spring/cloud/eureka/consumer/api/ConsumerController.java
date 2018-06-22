@@ -45,6 +45,8 @@ public class ConsumerController {
     @Autowired
     private FeignService feignService;
     @Autowired
+    private NlpFeignService nlpFeignService;
+    @Autowired
     private FeignHystrixService feignHystrixService;
 
     @LoadBalanced
@@ -201,7 +203,6 @@ public class ConsumerController {
         // 3.sig值
         String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, params);
         params.put("sig", sig);
-        params.put("sig", "123");
         // 发送请求（无法走zuul，只能直接走provider的服务）
         // 错误无法获取参数
         String result = this.restTemplate.postForObject("http://eureka-zuul/eureka-provider/textfilter-post", null, String.class, params);
@@ -213,8 +214,6 @@ public class ConsumerController {
         requestMap.add("t", String.valueOf(System.currentTimeMillis()));
         requestMap.add("content", content);
         requestMap.add("type", "basic-comment-text-filter");
-        requestMap.add("param1", "myParam1");
-        requestMap.add("param2", "myParam2");
         String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, requestMap.toSingleValueMap());
         requestMap.add("sig", sig);
 
@@ -226,5 +225,26 @@ public class ConsumerController {
         return result;
     }
 
+    @RequestMapping(value = "/nlp-feign-test", method = RequestMethod.GET)
+    public String nlpFeignTest() throws UnsupportedEncodingException {
+        String secretId = GenerateSigUtils.SECRETID;
+        String v = GenerateSigUtils.SECRETID;
+        String t = String.valueOf(System.currentTimeMillis());
+        String content = "皮皮虾你们好";
+        String type = "basic-comment-text-filter";
+
+        Map<String, String> params = new HashMap<String, String>();
+        // 1.设置公共参数
+        params.put("secretId", secretId);
+        params.put("v", v);
+        params.put("t", t);
+        // 2.业务参数
+        params.put("content", content);
+        params.put("type", type);
+        // 3.sig值
+        String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, params);
+        String result = this.nlpFeignService.commentTextfilting(secretId, v, t, content, type, sig);
+        return result;
+    }
 
 }
