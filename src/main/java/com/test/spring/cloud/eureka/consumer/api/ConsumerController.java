@@ -1,6 +1,8 @@
 package com.test.spring.cloud.eureka.consumer.api;
 
 import com.test.spring.cloud.eureka.consumer.util.GenerateSigUtils;
+import com.test.spring.cloud.eureka.consumer.util.RequestParamUtil;
+import com.test.spring.cloud.eureka.consumer.util.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,6 +246,20 @@ public class ConsumerController {
         // 3.sig值
         String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, params);
         String result = this.nlpFeignService.commentTextfilting(secretId, v, t, content, type, sig);
+        return result;
+    }
+
+    @RequestMapping(value = "/nlp-feign-test1", method = RequestMethod.GET)
+    public String nlpFeignTest1() throws UnsupportedEncodingException {
+        // 参数
+        Tuple<String, String> secretTuple = RequestParamUtil.createSecretIdTuple();
+        Tuple<String, String> vTuple = RequestParamUtil.createVersionTuple();
+        Tuple<String, String> tTuple = RequestParamUtil.createTimestampTuple();
+        Tuple<String, String> contentTuple = RequestParamUtil.createTuple("content", "皮皮虾");
+        Tuple<String, String> typeTuple = RequestParamUtil.createTuple("type", "basic-comment-text-filter");
+        String sig = GenerateSigUtils.genSignature(GenerateSigUtils.SECRETKEY, secretTuple, vTuple, tTuple, contentTuple, typeTuple);
+        // 请求
+        String result = this.nlpFeignService.commentTextfilting(secretTuple.getSecond(), vTuple.getSecond(), tTuple.getSecond(), contentTuple.getSecond(), typeTuple.getSecond(), sig);
         return result;
     }
 
