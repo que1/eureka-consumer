@@ -23,21 +23,21 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  *
  */
-@FeignClient(name = "eureka-provider")
+@FeignClient(name = "eureka-zuul/eureka-provider")
 public interface FeignService {
 
     /**
      * 不带参数
      */
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String sayHello();
+    public String sayHello(@RequestParam("sig") String sig);
 
 
     @RequestMapping(value = "textfilter-get", method = RequestMethod.GET)
-    public String filterGet(@RequestParam("param1") String param1, @RequestParam("param2") String param2);
+    public String filterGet(@RequestParam("param1") String param1, @RequestParam("param2") String param2, @RequestParam("sig") String sig);
 
 
     @RequestMapping(value = "textfilter-post", method = RequestMethod.POST)
-    public String filterPost(@RequestParam("param1") String param1, @RequestParam("param2") String param2);
+    public String filterPost(@RequestParam("param1") String param1, @RequestParam("param2") String param2, @RequestParam("sig") String sig);
 
 }

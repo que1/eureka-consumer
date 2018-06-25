@@ -135,7 +135,7 @@ public class ConsumerController {
     @RequestMapping(value = "/feign-test", method = RequestMethod.GET)
     public String feignTest() {
         logger.info("call api-feign-test");
-        return this.feignService.sayHello();
+        return this.feignService.sayHello("123");
     }
 
     /**
@@ -145,7 +145,7 @@ public class ConsumerController {
     @RequestMapping(value = "/feign-test-param-get", method = RequestMethod.GET)
     public String feignTestParamsGet() {
         logger.info("call api-textfilter-get");
-        return this.feignService.filterGet("testMyParam1", "testMyParam2");
+        return this.feignService.filterGet("testMyParam1", "testMyParam2", "123");
     }
 
     /**
@@ -155,7 +155,7 @@ public class ConsumerController {
     @RequestMapping(value = "/feign-test-param-post", method = RequestMethod.GET)
     public String feignTestParamsPost() {
         logger.info("call api-textfilter-post");
-        return this.feignService.filterPost("testMyParam1", "testMyParam2");
+        return this.feignService.filterPost("testMyParam1", "testMyParam2", "123");
     }
 
 
